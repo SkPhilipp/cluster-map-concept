@@ -3,6 +3,7 @@ package com.hileco.interaction
 import java.util.*
 import kotlin.collections.HashMap
 
+
 class ClusterMap<V : Clusterable>(
     /**
      * Width of a single cluster, the [ClusterMap] itself has no explicit limit.
@@ -38,7 +39,9 @@ class ClusterMap<V : Clusterable>(
     }
 
     /**
-     * Retrieves the cluster of the given [clusterable].
+     * Retrieves the entries in the clusters of the given [clusterable].
+     *
+     * May contain the same entries multiple times.
      */
     fun clusterOf(clusterable: V): List<V> {
         val keys = keysOf(clusterable)

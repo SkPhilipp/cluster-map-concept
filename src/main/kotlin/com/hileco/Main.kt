@@ -1,5 +1,6 @@
 package com.hileco
 
+import com.hileco.controls.ActionListener
 import com.hileco.controls.ControlsListener
 import com.hileco.drawing.GraphicsEngine
 import com.hileco.drawing.Pane
@@ -21,7 +22,8 @@ fun main() {
         clusterMap.add(it)
     }
     val game = Game(entities, localPlayer, clusterMap)
-    val controlsListener = ControlsListener(localPlayer)
+    val actionListener = ActionListener(game, localPlayer)
+    val controlsListener = ControlsListener(actionListener)
     Thread(Runnable {
         while (true) {
             Thread.sleep(10)

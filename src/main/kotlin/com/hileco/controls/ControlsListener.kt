@@ -1,13 +1,11 @@
 package com.hileco.controls
 
-import com.hileco.model.Entity
-
 class Control {
     var current = 0
     var stop = true
 }
 
-class ControlsListener(private val controlledEntity: Entity) {
+class ControlsListener(private val actionListener: ActionListener) {
     private var left = Control()
     private var right = Control()
     private var up = Control()
@@ -52,8 +50,8 @@ class ControlsListener(private val controlledEntity: Entity) {
     fun apply() {
         val horizontal = -left.current + right.current
         val vertical = -up.current + down.current
-        controlledEntity.x += horizontal
-        controlledEntity.y += vertical
+        actionListener.moveHorizontal(horizontal)
+        actionListener.moveVertical(vertical)
         if (left.stop) {
             left.current = 0
         }
