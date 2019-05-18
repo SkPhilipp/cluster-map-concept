@@ -16,7 +16,7 @@ fun main() {
     val localPlayer = Entity(BLOCK_SIZE * 6, 100 - PLAYER.height, PLAYER)
     entities.addAll(terrainGenerator.generate(0, 100, 100, 100))
     entities.add(localPlayer)
-    val clusterMap = ClusterMap<Entity>(BLOCK_SIZE * 6, BLOCK_SIZE * 6)
+    val clusterMap = ClusterMap<Entity>(BLOCK_SIZE * 2, BLOCK_SIZE * 2)
     entities.forEach {
         clusterMap.add(it)
     }
