@@ -1,13 +1,14 @@
 package com.hileco
 
 import com.hileco.controls.ControlsListener
+import com.hileco.drawing.GraphicsEngine
+import com.hileco.drawing.Pane
 import com.hileco.generation.TerrainGenerator
 import com.hileco.interaction.ClusterMap
 import com.hileco.model.Entity
 import com.hileco.model.EntityTypes.Companion.BLOCK_SIZE
 import com.hileco.model.EntityTypes.Companion.PLAYER
 import com.hileco.model.Game
-import java.util.concurrent.atomic.AtomicReference
 
 fun main() {
     val terrainGenerator = TerrainGenerator(0)
@@ -19,8 +20,7 @@ fun main() {
     entities.forEach {
         clusterMap.add(it)
     }
-    val highlights = AtomicReference<List<Entity>>()
-    val game = Game(entities, highlights, localPlayer, clusterMap)
+    val game = Game(entities, localPlayer, clusterMap)
     val controlsListener = ControlsListener(localPlayer)
     Thread(Runnable {
         while (true) {
@@ -28,9 +28,8 @@ fun main() {
             clusterMap.update(localPlayer) {
                 controlsListener.apply()
             }
-            val clusterOf = clusterMap.clusterOf(localPlayer)
-            highlights.set(clusterOf)
         }
     }).start()
-    Pane(game, controlsListener)
+    val graphicsEngine = GraphicsEngine(game)
+    Pane(graphicsEngine, controlsListener)
 }
