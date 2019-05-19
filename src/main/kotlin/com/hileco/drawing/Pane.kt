@@ -2,6 +2,8 @@ package com.hileco.drawing
 
 import com.hileco.controls.ControlsListener
 import com.hileco.controls.KeyboardControls
+import com.hileco.controls.MouseControls
+import com.hileco.interaction.InteractionListener
 import java.awt.Frame
 import java.awt.event.ActionListener
 import java.awt.event.WindowAdapter
@@ -11,7 +13,7 @@ import javax.swing.Timer
 
 class Pane(
     private val graphicsEngine: GraphicsEngine,
-    controlsListener: ControlsListener,
+    interactionListener: InteractionListener,
     private val pixelWidth: Int = 400,
     private val pixelHeight: Int = 400
 ) : Frame("Concept") {
@@ -24,7 +26,18 @@ class Pane(
                 System.exit(0)
             }
         })
+        val controlsListener = ControlsListener(interactionListener)
+        Thread(Runnable {
+            while (true) {
+                Thread.sleep(10)
+                controlsListener.apply()
+            }
+        }).start()
         addKeyListener(KeyboardControls(controlsListener))
+        val mouseControls = MouseControls(interactionListener)
+        addMouseListener(mouseControls)
+        addMouseMotionListener(mouseControls)
+        addMouseWheelListener(mouseControls)
         val timer = Timer(20, ActionListener { redraw() })
         timer.start()
         createBufferStrategy(2)

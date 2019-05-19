@@ -1,11 +1,13 @@
 package com.hileco.controls
 
+import com.hileco.interaction.InteractionListener
+
 class Control {
     var current = 0
     var stop = true
 }
 
-class ControlsListener(private val actionListener: ActionListener) {
+class ControlsListener(private val interactionListener: InteractionListener) {
     private var left = Control()
     private var right = Control()
     private var up = Control()
@@ -50,8 +52,10 @@ class ControlsListener(private val actionListener: ActionListener) {
     fun apply() {
         val horizontal = -left.current + right.current
         val vertical = -up.current + down.current
-        actionListener.moveHorizontal(horizontal)
-        actionListener.moveVertical(vertical)
+        if(horizontal != 0 || vertical != 0) {
+            interactionListener.moveHorizontal(horizontal)
+            interactionListener.moveVertical(vertical)
+        }
         if (left.stop) {
             left.current = 0
         }

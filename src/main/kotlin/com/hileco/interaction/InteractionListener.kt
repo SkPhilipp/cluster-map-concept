@@ -1,10 +1,9 @@
-package com.hileco.controls
+package com.hileco.interaction
 
-import com.hileco.interaction.Collisions
 import com.hileco.model.Entity
 import com.hileco.model.Game
 
-class ActionListener(
+class InteractionListener(
     private val game: Game,
     private val controlledEntity: Entity
 ) {
@@ -16,7 +15,9 @@ class ActionListener(
             .filter { it != controlledEntity }
             .count { collisions.wouldCollide(controlledEntity, difference, 0, it) }
         if (collisionCount == 0) {
-            controlledEntity.x += difference
+            game.clusterMap.update(controlledEntity) {
+                controlledEntity.x += difference
+            }
         }
     }
 
@@ -26,7 +27,24 @@ class ActionListener(
             .filter { it != controlledEntity }
             .count { collisions.wouldCollide(controlledEntity, 0, difference, it) }
         if (collisionCount == 0) {
-            controlledEntity.y += difference
+            game.clusterMap.update(controlledEntity) {
+                controlledEntity.y += difference
+            }
         }
+    }
+
+    fun target(x: Int, y: Int) {
+        game.targetLocation = x to y
+    }
+
+    fun trigger(x: Int, y: Int) {
+        game.clusterMap.clusterOf(x, y)
+            .filter { it != controlledEntity }
+            .filter { collisions.isOn(x, y, it) }
+            .filter { collisions.distanceBetween(it, game.localPlayer) < 50 }
+            .forEach { entity ->
+                game.clusterMap.remove(entity)
+                game.entities.remove(entity)
+            }
     }
 }

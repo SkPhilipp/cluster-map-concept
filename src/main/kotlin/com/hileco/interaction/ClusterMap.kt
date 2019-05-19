@@ -25,6 +25,12 @@ class ClusterMap<V : Clusterable>(
         return IntRange(clusterX1, clusterX2) to IntRange(clusterY1, clusterY2)
     }
 
+    private fun keyOf(x: Int, y: Int): Pair<Int, Int> {
+        val clusterX = (x - x % clusterWidth) / clusterWidth
+        val clusterY = (y - y % clusterHeight) / clusterHeight
+        return clusterX to clusterY
+    }
+
     /**
      * Adds the given [clusterable] to the map.
      */
@@ -50,6 +56,16 @@ class ClusterMap<V : Clusterable>(
                 map.getOrDefault(x to y, Collections.emptyList())
             }
         }
+    }
+
+    /**
+     * Retrieves the entries in the clusters of the given location.
+     *
+     * May contain the same entries multiple times.
+     */
+    fun clusterOf(x: Int, y: Int): List<V> {
+        val key = keyOf(x, y)
+        return map.getOrDefault(key, Collections.emptyList())
     }
 
     /**

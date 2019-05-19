@@ -11,14 +11,28 @@ class GraphicsEngine(private val game: Game) {
 
     fun draw(bufferGraphics: Graphics) {
         game.entities.forEach {
-            bufferGraphics.color = it.entityType.color
-            bufferGraphics.fillRect(it.x, it.y, it.entityType.width, it.entityType.height)
+            bufferGraphics.color = it.type.color
+            bufferGraphics.fillRect(it.x, it.y, it.type.width, it.type.height)
         }
+        /**
+         * Highlight collisions around the local player.
+         */
         game.clusterMap.clusterOf(game.localPlayer).forEach {
             if (it != game.localPlayer) {
                 val colliding = collisions.areColliding(it, game.localPlayer)
                 bufferGraphics.color = if (colliding) Color.blue else Color.yellow
-                bufferGraphics.drawRect(it.x, it.y, it.entityType.width, it.entityType.height)
+                bufferGraphics.drawRect(it.x, it.y, it.type.width, it.type.height)
+            }
+        }
+        /**
+         * Highlight collisions around the target.
+         */
+        val targetLocation = game.targetLocation
+        if (targetLocation != null) {
+            game.clusterMap.clusterOf(targetLocation.first, targetLocation.second).forEach {
+                val colliding = collisions.isOn(targetLocation.first, targetLocation.second, it)
+                bufferGraphics.color = if (colliding) Color.blue else Color.yellow
+                bufferGraphics.drawRect(it.x, it.y, it.type.width, it.type.height)
             }
         }
     }
