@@ -14,8 +14,8 @@ import javax.swing.Timer
 class Pane(
     private val graphicsEngine: GraphicsEngine,
     interactionListener: InteractionListener,
-    private val pixelWidth: Int = 400,
-    private val pixelHeight: Int = 400
+    pixelWidth: Int = 800,
+    pixelHeight: Int = 900
 ) : Frame("Concept") {
 
     init {
@@ -46,7 +46,6 @@ class Pane(
     private fun redraw() {
         do {
             val bufferGraphics = bufferStrategy.drawGraphics
-            bufferGraphics.clearRect(0, 0, pixelWidth, pixelHeight)
             graphicsEngine.draw(bufferGraphics)
             bufferGraphics.dispose()
             bufferStrategy.show()
